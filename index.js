@@ -31,6 +31,12 @@ const argv = yargs(hideBin(process.argv))
 
 	const output = diff(expected, actual);
 
-	createReport(output, '', argv.report)
+	const info = {
+		title: 'Excel Diffing',
+		expected: argv.expected,
+		actual: argv.actual
+	}
+
+	createReport(output, info, argv.report)
 
 })();

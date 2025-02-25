@@ -12,14 +12,11 @@ async function parseInput(arg) {
 		// validate if the file is xslx
 		const type = await fileTypeFromFile(arg);
 		if (type && type.ext === 'xlsx') {
-			// Convert to CSV
-			console.log('It is a XLSX');
 			const worksheet = await getXLSXWorksheet(arg);
 			const csv = await toCSV(worksheet);
 			return csv;
 
 		} else if(path.extname(arg).toLowerCase() === '.csv') {
-			console.log('It is a CSV');
 			const worksheet = await getCSVWorksheet(arg);
 			const csv = await toCSV(worksheet);
 			return csv;
@@ -83,10 +80,14 @@ function diff(left, right) {
 
 }
 
-function createReport(data, title, filepath) {
+function createReport(data, info, filepath) {
 	let base = fs.readFileSync('assets/base.html', 'utf8')
 
-	const report = base.replace('<body></body>', `<body>\n${data}\n</body>`);
+	const report = base
+	.replace('<title></title>', `<title>${info.title}</title>`)
+	.replace('<p id="expected"></p>', `<p id="expected">${info.expected}</p>`)
+	.replace('<p id="actual"></p>', `<p id="actual">${info.actual}</p>`)
+	.replace('<div id="table-container"></div>', `<div id="table-container">\n${data}\n</div>`);
 
 	const absolutePath = path.isAbsolute(filepath) ? filepath : path.join(__dirname, filepath);
 	const outputDir = path.dirname(absolutePath);
