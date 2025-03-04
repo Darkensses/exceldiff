@@ -20,7 +20,7 @@ const argv = yargs(hideBin(process.argv))
 	alias: 'r',
 	describe: 'Path to the report file',
 	type: 'string',
-	demandOption: true
+	demandOption: false
 })
 .help()
 .argv;
@@ -30,13 +30,17 @@ const argv = yargs(hideBin(process.argv))
 	const actual = await parseInput(argv.actual);
 
 	const output = diff(expected, actual);
+	console.log(output.is_equal);
 
-	const info = {
-		title: 'Excel Diffing',
-		expected: argv.expected,
-		actual: argv.actual
+	if(argv.report) {
+
+		const info = {
+			title: 'Excel Diffing',
+			expected: argv.expected,
+			actual: argv.actual
+		}
+
+		createReport(output.html, info, argv.report);
 	}
-
-	createReport(output, info, argv.report)
 
 })();

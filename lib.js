@@ -76,7 +76,7 @@ function diff(left, right) {
 	diff2html.render(output);
 	var table_diff_html = diff2html.html();
 
-	return table_diff_html;
+	return {is_equal: ct.comp.is_equal, html: table_diff_html};
 
 }
 
